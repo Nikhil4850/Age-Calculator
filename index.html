@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator with PyScript</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+<body>
+    <h1>Age Calculator</h1>
+    <form id="birthdate-form">
+        <label for="birth-year">Year:</label>
+        <input type="number" id="birth-year" min="1900" max="2100" required>
+        <br>
+        <label for="birth-month">Month:</label>
+        <input type="number" id="birth-month" min="1" max="12" required>
+        <br>
+        <label for="birth-day">Day:</label>
+        <input type="number" id="birth-day" min="1" max="31" required>
+        <br>
+        <label for="birth-hour">Hour:</label>
+        <input type="number" id="birth-hour" min="0" max="23" value="0">
+        <br>
+        <label for="birth-minute">Minute:</label>
+        <input type="number" id="birth-minute" min="0" max="59" value="0">
+        <br>
+        <label for="birth-second">Second:</label>
+        <input type="number" id="birth-second" min="0" max="59" value="0">
+        <br><br>
+        <button type="button" id="calculate-button">Calculate Age</button>
+    </form>
+    <h2 id="result"></h2>
+    
+    <py-script>
+        from datetime import datetime
+
+        def calculate_age():
+            # Get input values from the form
+            birth_year = int(birth_year_el.value)
+            birth_month = int(birth_month_el.value)
+            birth_day = int(birth_day_el.value)
+            birth_hour = int(birth_hour_el.value)
+            birth_minute = int(birth_minute_el.value)
+            birth_second = int(birth_second_el.value)
+
+            # Current date and time
+            current_time = datetime.now()
+
+            # Birth date and time
+            birth_time = datetime(birth_year, birth_month, birth_day, birth_hour, birth_minute, birth_second)
+
+            # Calculate age differences
+            age_delta = current_time - birth_time
+
+            # Breakdown the difference into years, months, and days
+            age_years = age_delta.days // 365
+            age_days = age_delta.days % 365
+            age_hours, rem = divmod(age_delta.seconds, 3600)
+            age_minutes, age_seconds = divmod(rem, 60)
+
+            # Display the result
+            result_el.innerHTML = f"You are {age_years} years, {age_days} days, {age_hours} hours, {age_minutes} minutes, and {age_seconds} seconds old!"
+
+        # Bind HTML elements to PyScript
+        birth_year_el = Element("birth-year")
+        birth_month_el = Element("birth-month")
+        birth_day_el = Element("birth-day")
+        birth_hour_el = Element("birth-hour")
+        birth_minute_el = Element("birth-minute")
+        birth_second_el = Element("birth-second")
+        result_el = Element("result")
+
+        # Add event listener to the button
+        calculate_button = Element("calculate-button")
+        calculate_button.element.onclick = calculate_age
+    </py-script>
+</body>
+</html>
